@@ -3,6 +3,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public float zoomSpeed = 2;
+    public float panSpeed = 0.1f;
+    public float panSpeedByZoomFactor = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector3 mousePosLastFrame = Vector3.zero;
@@ -27,11 +29,11 @@ public class CameraController : MonoBehaviour
         mouseDelta = mousePos - mousePosLastFrame;
         mousePosLastFrame = mousePos;
 
-        cam.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        cam.orthographicSize += cam.orthographicSize + Input.GetAxis("Mouse ScrollWheel") * zoomSpeed < 0 ? 0 : Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
 
         if (Input.GetKey(KeyCode.Mouse2))
         {
-            transform.position -= mouseDelta;
+            transform.position -= new Vector3(Input.mousePositionDelta.x * panSpeed * (cam.orthographicSize * panSpeedByZoomFactor), Input.mousePositionDelta.y * panSpeed * (cam.orthographicSize * panSpeedByZoomFactor), 0);
         }
     }
 }

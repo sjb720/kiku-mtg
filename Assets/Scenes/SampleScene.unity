@@ -269,7 +269,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc7d262d04f2f34fa074a6ec9eafd2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 2
+  zoomSpeed: 2.5
+  panSpeed: 0.02
+  panSpeedByZoomFactor: 0.2
+  mousePosLastFrame: {x: 0, y: 0, z: 0}
+  mouseDelta: {x: 0, y: 0, z: 0}
+  mousePos: {x: 0, y: 0, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,9 +508,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hovering: 0
   dragging: 0
+  card: Agatha of the Vile Cauldron
   tapped: 0
   flipped: 0
   token: 0
+  tapSpeedAnimation: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
