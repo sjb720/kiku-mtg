@@ -115,16 +115,34 @@ public class CardInPlay : NetworkBehaviour
         hovering = false;
     }
 
+
+
+    // Tapping
+
     [Command(requiresAuthority =false)]
     public void CmdTap()
+    {
+        RpcTap();
+    }
+
+    [ClientRpc]
+    public void RpcTap()
     {
         tapped = true;
         rotLerp = 0;
         lastRotation = transform.rotation;
     }
 
+    // Untapping
+
     [Command(requiresAuthority = false)]
     public void CmdUntap()
+    {
+        RpcUntap();
+    }
+
+    [ClientRpc]
+    public void RpcUntap()
     {
         tapped = false;
         rotLerp = 0;
