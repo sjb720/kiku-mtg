@@ -1,5 +1,6 @@
 using Mirror;
 using Mirror.BouncyCastle.Tls.Crypto.Impl.BC;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -47,6 +48,7 @@ public class CardInPlay : NetworkBehaviour
     {
         freshCard = Resources.Load<GameObject>("CardInPlay");
         spriteRenderer = GetComponent<SpriteRenderer>();
+        transform.Find("DebugText").GetComponent<TextMeshPro>().text = card;
     }
 
     // Update is called once per frame
@@ -160,7 +162,14 @@ public class CardInPlay : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdClone()
     {
-        GameObject go = Instantiate(freshCard, transform.position - new Vector3(0.1f, 0.1f, 0f), transform.rotation);
+        GameObject go = Instantiate(freshCard, transform.position - new Vector3(0.3f, 0.3f, 0f), transform.rotation);
+        CardInPlay cip = go.GetComponent<CardInPlay>();
+        
+        // clone important token info:
+        cip.name = name;
+        cip.token = true;
+
+        // spawn card on server for clients
         NetworkServer.Spawn(go);
     }
 
