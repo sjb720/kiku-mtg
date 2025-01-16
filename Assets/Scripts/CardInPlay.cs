@@ -1,5 +1,6 @@
 using Mirror;
 using Mirror.BouncyCastle.Tls.Crypto.Impl.BC;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CardInPlay : NetworkBehaviour
@@ -23,6 +24,8 @@ public class CardInPlay : NetworkBehaviour
     [SyncVar]
     public bool token = false;
 
+    GameObject freshCard;
+
     // animation values
     public float tapSpeedAnimation = 2f;
 
@@ -42,16 +45,21 @@ public class CardInPlay : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        freshCard = Resources.Load<GameObject>("CardInPlay");
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerCam == null)
+
+        if (NetworkClient.localPlayer != null)
         {
             playerCam = NetworkClient.localPlayer.gameObject.GetComponent<CameraController>();
+        }
 
+        if (playerCam == null)
+        {
             return;
         }
 
@@ -152,8 +160,8 @@ public class CardInPlay : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdClone()
     {
-        GameObject go = Instantiate(gameObject, transform.position - new Vector3(0.1f, 0.1f, 0f), transform.rotation);
-        NetworkServer.Spawn(go, connectionToClient);
+        GameObject go = Instantiate(freshCard, transform.position - new Vector3(0.1f, 0.1f, 0f), transform.rotation);
+        NetworkServer.Spawn(go);
     }
 
     [Command(requiresAuthority = false)]

@@ -208,4 +208,5 @@ MonoBehaviour:
   tapped: 0
   flipped: 0
   token: 0
+  freshCard: {fileID: 3503187137955379451}
   tapSpeedAnimation: 2

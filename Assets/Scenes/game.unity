@@ -391,6 +391,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.43456852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_SortingOrder
+      value: -10
+      objectReference: {fileID: 0}
     - target: {fileID: 8881325355091828996, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_Name
       value: Playmat (2)
@@ -448,6 +464,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.43456852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_SortingOrder
+      value: -10
+      objectReference: {fileID: 0}
     - target: {fileID: 8881325355091828996, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_Name
       value: Playmat (3)
@@ -504,6 +536,22 @@ PrefabInstance:
     - target: {fileID: 5778988489262751303, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.43456852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_SortingOrder
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8881325355091828996, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_Name
@@ -753,6 +801,22 @@ PrefabInstance:
     - target: {fileID: 5778988489262751303, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.43456852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.764151
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7123817137265319855, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
+      propertyPath: m_SortingOrder
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8881325355091828996, guid: af32fbb78be46904a977f318650bc4a6, type: 3}
       propertyPath: m_Name
