@@ -81,44 +81,7 @@ public class CardInPlay : NetworkBehaviour
         else
         {
             Debug.Log("card file does not exist at " + CARD_IMAGE_PATH);
-            StartCoroutine(LoadCardImageFromWeb());
-        }
-    }
-
-    IEnumerator LoadCardImageFromWeb()
-    {
-        // get the card data from scryfall, ty scryfall :)
-        UnityWebRequest cardDetailsRequest = UnityWebRequest.Get("https://api.scryfall.com/cards/named?fuzzy="+card);
-        yield return cardDetailsRequest.SendWebRequest();
-
-        if (cardDetailsRequest.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log("failed to get card image url from scryfall");
-            yield break;
-        }
-
-        // parse into our dto and ask for the png using the uri
-        var text = cardDetailsRequest.downloadHandler.text;
-        JToken token = JToken.Parse(text);
-        string imageURI = token.SelectToken("image_uris.png").ToObject<string>();
-        UnityWebRequest imageResponse = UnityWebRequestTexture.GetTexture(imageURI);
-        yield return imageResponse.SendWebRequest();
-
-        if (imageResponse.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError("failed to get card image from web");
-        } else
-        {
-            // set our texture then save to disk for max player enjoyment
-            Debug.Log("got image data for " + card + "!");
-            Texture2D loadedTexture = DownloadHandlerTexture.GetContent(imageResponse);
-            ApplyTexture(loadedTexture);
-            Debug.Log("got texture for " + card + "!");
-
-            // save the sprite to disk now
-            byte[] textureBytes = GetComponent<SpriteRenderer>().sprite.texture.EncodeToPNG();
-            File.WriteAllBytes(CARD_IMAGE_PATH, textureBytes);
-            Debug.Log("successfully wrote " + card + " to disk!");
+            GameManager.instance.AddToImageQueue(new ImageLoadRequest(card, spriteRenderer));
         }
     }
 
