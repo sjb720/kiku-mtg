@@ -166,7 +166,7 @@ public class CardInPlay : NetworkBehaviour
         CardInPlay cip = go.GetComponent<CardInPlay>();
         
         // clone important token info:
-        cip.name = name;
+        cip.card = card;
         cip.token = true;
 
         // spawn card on server for clients

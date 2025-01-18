@@ -4,17 +4,25 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System;
+using System.Linq;
 
 public class Playmat : NetworkBehaviour
 {
 
+    // resources
+    GameObject freshCard;
+
     // references
-    public TMP_InputField colorInput,deckListInput,errorDisplay;
+    public TMP_InputField colorInput,deckListInput;
+    public TMP_Text errorDisplay, libDisplay;
     public GameObject claimMattCanvas;
 
-    // delimited by |
+    // delimited by n. untouched original state of deck.
     [SyncVar]
     public string deckList;
+
+    [SyncVar (hook = nameof(HandleLibraryChange))]
+    public string library;
 
     [SyncVar]
     public string commanders;
@@ -28,7 +36,7 @@ public class Playmat : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        freshCard = Resources.Load<GameObject>("CardInPlay");
     }
 
     // Update is called once per frame
@@ -42,6 +50,30 @@ public class Playmat : NetworkBehaviour
         CmdClaimMatt(colorInput.text, deckListInput.text);
     }
 
+    public void DrawCard()
+    {
+        CmdDrawCard();
+    }
+
+    [Command(requiresAuthority =false)]
+    void CmdDrawCard()
+    {
+        var lib = DeckUtils.DeserializeDeck(library);
+
+        if (lib.Count == 0)
+        {
+            return;
+        }
+
+        var card = lib[0];
+        GameObject go = Instantiate(freshCard, Vector3.zero, transform.rotation);
+        go.GetComponent<CardInPlay>().card = card;
+        NetworkServer.Spawn(go);
+
+        lib.RemoveAt(0);
+        library = DeckUtils.SerializeDeck(lib);
+    }
+
     [Command(requiresAuthority = false)]
     void CmdClaimMatt(string color, string deckListInput)
     {
@@ -51,11 +83,15 @@ public class Playmat : NetworkBehaviour
 
         // get our decklist
         var deckInfo = parseDecklist(deckListInput);
+        deckList = DeckUtils.SerializeDeck(deckInfo.decklist);
+
+        // shuffle the decklist and put it in our library
         deckInfo.decklist.Shuffle();
+        library = DeckUtils.SerializeDeck(deckInfo.decklist);
 
-
-        commanders = string.Join("\n", deckInfo.commanders);
-        deckList = string.Join("\n", deckInfo.decklist);
+        // take our commanders and 
+        commanders = DeckUtils.SerializeDeck(deckInfo.commanders);
+        
         matColor = newCol;
         claimed = true;
     }
@@ -117,12 +153,28 @@ public class Playmat : NetworkBehaviour
         claimMattCanvas.SetActive(!n);
     }
 
-    
+    void HandleLibraryChange(string oldLibrary, string newLibrary) {
+        libDisplay.text = newLibrary;
+    }
+
+
 }
 
 
 public static class DeckUtils
 {
+
+    public static List<string> DeserializeDeck(string deckList)
+    {
+        var list = deckList.Split("\n");
+        return list.OfType<string>().ToList();
+    }
+
+    public static string SerializeDeck(List<string> deckList)
+    {
+        return String.Join("\n", deckList);
+    }
+
     public static void Shuffle<T>(this IList<T> list)
     {
         RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
