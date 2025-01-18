@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System;
 using System.Linq;
+using System.IO;
 
 public class Playmat : NetworkBehaviour
 {
@@ -37,7 +38,10 @@ public class Playmat : NetworkBehaviour
     void Start()
     {
         freshCard = Resources.Load<GameObject>("CardInPlay");
+
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -66,6 +70,7 @@ public class Playmat : NetworkBehaviour
         }
 
         var card = lib[0];
+        Debug.Log("drew card '" + card + "'");
         GameObject go = Instantiate(freshCard, Vector3.zero, transform.rotation);
         go.GetComponent<CardInPlay>().card = card;
         NetworkServer.Spawn(go);
@@ -122,10 +127,10 @@ public class Playmat : NetworkBehaviour
                 {
                     if(nextIsCommanders)
                     {
-                        commanders.Add(cardInfo[1]);
+                        commanders.Add(cardInfo[1].Substring(0, cardInfo[1].Length - 1));
                     } else
                     {
-                        cards.Add(cardInfo[1]);
+                        cards.Add(cardInfo[1].Substring(0, cardInfo[1].Length - 1));
                     }
                 }
 

@@ -377,6 +377,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1164665026485137086, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
+      propertyPath: card
+      value: Marchesa, Dealer of Death
+      objectReference: {fileID: 0}
     - target: {fileID: 3503187137955379451, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
       propertyPath: m_Name
       value: CardInPlay (1)
