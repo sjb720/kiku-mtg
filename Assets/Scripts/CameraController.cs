@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class CameraController : NetworkBehaviour
 {
+    [SyncVar (hook = nameof(HandleHandChange))]
+    public string hand = "";
+
     public float zoomSpeed = 2;
     public float panSpeed = 0.1f;
     public float panSpeedByZoomFactor = 1f;
@@ -54,5 +57,24 @@ public class CameraController : NetworkBehaviour
     void CmdSetPosition(Vector3 newPosition)
     {
         transform.position = newPosition;
+    }
+
+    [Command]
+    public void CmdAddCardToHand(string card)
+    {
+        var cards = DeckUtils.DeserializeDeck(hand);
+        cards.Add(card);
+        hand = DeckUtils.SerializeDeck(cards);
+    }
+
+    void HandleHandChange(string oldHand, string newHand)
+    {
+        // no need to update the display hand of someone that isnt us
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        transform.Find("HandDisplay").GetComponent<HandDisplay>().SyncDisplayedCards(newHand);
     }
 }

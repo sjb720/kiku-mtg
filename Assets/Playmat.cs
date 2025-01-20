@@ -56,11 +56,17 @@ public class Playmat : NetworkBehaviour
 
     public void DrawCard()
     {
-        CmdDrawCard();
+        // draw a card to our clients hand
+        CmdDrawCard(NetworkClient.localPlayer.gameObject);
+    }
+
+    public void DrawToBattlefield()
+    {
+        CmdDrawToBattlefield();
     }
 
     [Command(requiresAuthority =false)]
-    void CmdDrawCard()
+    void CmdDrawCard(GameObject player)
     {
         var lib = DeckUtils.DeserializeDeck(library);
 
@@ -71,7 +77,24 @@ public class Playmat : NetworkBehaviour
 
         var card = lib[0];
         Debug.Log("drew card '" + card + "'");
-        GameObject go = Instantiate(freshCard, Vector3.zero, transform.rotation);
+        player.GetComponent<CameraController>().CmdAddCardToHand(card);
+        lib.RemoveAt(0);
+        library = DeckUtils.SerializeDeck(lib);
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdDrawToBattlefield()
+    {
+        var lib = DeckUtils.DeserializeDeck(library);
+
+        if (lib.Count == 0)
+        {
+            return;
+        }
+
+        var card = lib[0];
+        Debug.Log("drew card '" + card + "'");
+        GameObject go = Instantiate(freshCard, transform.position, transform.rotation);
         go.GetComponent<CardInPlay>().card = card;
         NetworkServer.Spawn(go);
 
@@ -171,6 +194,13 @@ public static class DeckUtils
 
     public static List<string> DeserializeDeck(string deckList)
     {
+        // if it's empty, return an empty list
+        if (deckList.Length == 0)
+        {
+            return new List<string>();
+        }
+
+        // otherwise split by newline
         var list = deckList.Split("\n");
         return list.OfType<string>().ToList();
     }

@@ -59,53 +59,7 @@ public class CardInPlay : NetworkBehaviour
         freshCard = Resources.Load<GameObject>("CardInPlay");
         spriteRenderer = GetComponent<SpriteRenderer>();
         transform.Find("DebugText").GetComponent<TextMeshPro>().text = card;
-
-        GetCardImage();
-    }
-
-    void GetCardImage()
-    {
-        Debug.Log("getting card image for "+card);
-
-        // create card cache if doesn't exist
-        if (!Directory.Exists(CARD_FACE_DIR_PATH))
-        {
-            Directory.CreateDirectory(CARD_FACE_DIR_PATH);
-        }
-
-        // if card image doesn't exist, create it
-        if (File.Exists(CARD_IMAGE_PATH))
-        {
-            LoadCardImageFromDisk();
-        }
-        else
-        {
-            Debug.Log("card file does not exist at " + CARD_IMAGE_PATH);
-            GameManager.instance.AddToImageQueue(new ImageLoadRequest(card, spriteRenderer));
-        }
-    }
-
-    void LoadCardImageFromDisk()
-    {
-        if (!File.Exists(CARD_IMAGE_PATH))
-        {
-            Debug.LogError("missing texture for card " + card);
-            return;
-        }
-
-        Debug.Log("found texture for "+card);
-
-        byte[] textureBytes = File.ReadAllBytes(CARD_IMAGE_PATH);
-        Texture2D loadedTexture = new Texture2D(0,0);
-        loadedTexture.LoadImage(textureBytes);
-        ApplyTexture(loadedTexture);
-
-    }
-
-    void ApplyTexture(Texture2D texture)
-    {
-        GetComponent<SpriteRenderer>().sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        transform.Find("DebugText").gameObject.SetActive(false);
+        GameManager.instance.RenderCardSprite(new ImageLoadRequest(card, spriteRenderer));
     }
 
     // Update is called once per frame
