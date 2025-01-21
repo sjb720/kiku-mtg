@@ -85,7 +85,7 @@ public class GameManager : NetworkBehaviour
         }
         else
         {
-            Debug.Log("card file does not exist at " + GetCardImageLocalPath(card));
+            Debug.Log("card file does not exist at " + GetCardImageLocalPath(card) + ", adding card to image queue");
             AddToImageQueue(ilr);
         }
     }
@@ -95,7 +95,7 @@ public class GameManager : NetworkBehaviour
         imageLoadQueue.Enqueue(imageRequest);
 
         if (!consumingImageQueue && imageLoadQueue.Count > 0) {
-            Debug.Log("starting the image queue");
+            Debug.Log("!! starting the image queue !!");
             consumingImageQueue = true;
             StartCoroutine(StartImageRequestLoop());
         }
@@ -103,20 +103,14 @@ public class GameManager : NetworkBehaviour
 
     IEnumerator StartImageRequestLoop()
     {
-        Debug.Log("looping on queue...");
-        var next = imageLoadQueue.Dequeue();
-        yield return LoadCardImageFromWeb(next);
-        yield return new WaitForSeconds(1.5f);
-
-        // recurse if we have another thing in the queue
-        if (imageLoadQueue.Count > 0)
-        {
-            StartCoroutine(StartImageRequestLoop());
+        while (imageLoadQueue.Count > 0) {
+            var next = imageLoadQueue.Dequeue();
+            Debug.Log("making a network request for card "+next.cardName);
+            yield return LoadCardImageFromWeb(next);
+            yield return new WaitForSeconds(1.5f);
         }
-        else
-        {
-            consumingImageQueue = false;
-        }
+        Debug.Log("!! ending the image queue !!");
+        consumingImageQueue = false;
     }
 
     void LoadCardImageFromDisk(ImageLoadRequest ilr)
@@ -152,7 +146,16 @@ public class GameManager : NetworkBehaviour
         // parse into our dto and ask for the png using the uri
         var text = cardDetailsRequest.downloadHandler.text;
         JToken token = JToken.Parse(text);
-        string imageURI = token.SelectToken("image_uris.png").ToObject<string>();
+        string imageURI;
+        try
+        {
+            imageURI = token.SelectToken("image_uris.png").ToObject<string>();
+        } catch
+        {
+            Debug.Log("failed to get image uris, is "+card +" a double sided card?");
+            yield break;
+        }
+
         UnityWebRequest imageResponse = UnityWebRequestTexture.GetTexture(imageURI);
         yield return imageResponse.SendWebRequest();
 
