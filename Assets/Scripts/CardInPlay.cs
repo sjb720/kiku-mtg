@@ -18,14 +18,17 @@ public class CardInPlay : NetworkBehaviour
 
     // card states
     [SyncVar]
-    public string card = "Agatha of the Vile Cauldron";
-    
+    public string card = "";
+
     [SyncVar]
     public bool tapped = false;
     
     [SyncVar]
     public bool flipped = false;
-    
+
+    [SyncVar (hook = nameof(HandleAltFaceShowingChange))]
+    public bool altFaceShowing = false;
+
     [SyncVar]
     public bool token = false;
 
@@ -104,10 +107,11 @@ public class CardInPlay : NetworkBehaviour
                 }
             }
 
-            spriteRenderer.color = Color.red;
-        } else
-        {
-            spriteRenderer.color = Color.white;
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                CmdShowAltFace();
+            }
+
         }
 
         if (dragging)
@@ -136,7 +140,26 @@ public class CardInPlay : NetworkBehaviour
         hovering = false;
     }
 
+    public void HandleAltFaceShowingChange(bool oldValue, bool isShowingAltFace)
+    {
+        if (isShowingAltFace)
+        {
+            transform.Find("AltFace").GetComponent<SpriteRenderer>().color = Color.white;
+            GetComponent<SpriteRenderer>().color = Color.clear;
+        } else
+        {
+            transform.Find("AltFace").GetComponent<SpriteRenderer>().color = Color.clear;
+            GetComponent<SpriteRenderer>().color = Color.white;
+        }
+    }
 
+
+    // Alt face
+    [Command(requiresAuthority = false)]
+    public void CmdShowAltFace()
+    {
+        altFaceShowing = !altFaceShowing;
+    }
 
     // Tapping
 

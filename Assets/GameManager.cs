@@ -82,6 +82,7 @@ public class GameManager : NetworkBehaviour
         if (File.Exists(GetCardImageLocalPath(card)))
         {
             LoadCardImageFromDisk(ilr);
+            LoadAltCardImageFromDisk(ilr);
         }
         else
         {
@@ -130,6 +131,23 @@ public class GameManager : NetworkBehaviour
         ApplySprite(sprite, ilr);
     }
 
+    void LoadAltCardImageFromDisk(ImageLoadRequest ilr)
+    {
+        if (!File.Exists(GetCardImageLocalPath(ilr.cardName+"_alt")))
+        {
+            Debug.LogError("not alt face found " + ilr.cardName);
+            return;
+        }
+
+        Debug.Log("found alt face texture for " + ilr.cardName);
+
+        byte[] textureBytes = File.ReadAllBytes(GetCardImageLocalPath(ilr.cardName+"_alt"));
+        Texture2D loadedTexture = new Texture2D(0, 0);
+        loadedTexture.LoadImage(textureBytes);
+        Sprite sprite = CreateCardSpriteFromTexture(loadedTexture);
+        ApplyAltSprite(sprite, ilr);
+    }
+
     IEnumerator LoadCardImageFromWeb(ImageLoadRequest ilr)
     {
         string card = ilr.cardName;
@@ -147,13 +165,22 @@ public class GameManager : NetworkBehaviour
         var text = cardDetailsRequest.downloadHandler.text;
         JToken token = JToken.Parse(text);
         string imageURI;
+        string altImageURI = "";
         try
         {
             imageURI = token.SelectToken("image_uris.png").ToObject<string>();
         } catch
         {
             Debug.Log("failed to get image uris, is "+card +" a double sided card?");
-            yield break;
+            try
+            {
+                imageURI = token.SelectToken("card_faces[0].image_uris.png").ToObject<string>();
+                altImageURI = token.SelectToken("card_faces[1].image_uris.png").ToObject<string>();
+            } catch
+            {
+                Debug.Log("failed to get both faces, not sure what " + card + " is.");
+                yield break;
+            }
         }
 
         UnityWebRequest imageResponse = UnityWebRequestTexture.GetTexture(imageURI);
@@ -163,7 +190,7 @@ public class GameManager : NetworkBehaviour
         {
             Debug.LogError("failed to get card image from web");
         }
-        else
+            else
         {
             // set our texture then save to disk for max player enjoyment
             Debug.Log("got image data for " + card + "!");
@@ -176,6 +203,32 @@ public class GameManager : NetworkBehaviour
             byte[] textureBytes = sprite.texture.EncodeToPNG();
             File.WriteAllBytes(GetCardImageLocalPath(card), textureBytes);
             Debug.Log("successfully wrote " + card + " to disk!");
+        }
+
+        // if we have an alternate image we must also grab we're not done yet...
+        if (altImageURI != "")
+        {
+            UnityWebRequest altImageResponse = UnityWebRequestTexture.GetTexture(altImageURI);
+            yield return altImageResponse.SendWebRequest();
+
+            if (altImageResponse.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError("failed to get card image from web");
+            }
+            else
+            {
+                // set our texture then save to disk for max player enjoyment
+                Debug.Log("got image data for " + card + "(alt) !");
+                Texture2D loadedTexture = DownloadHandlerTexture.GetContent(altImageResponse);
+                Sprite sprite = CreateCardSpriteFromTexture(loadedTexture);
+                ApplyAltSprite(sprite, ilr);
+                Debug.Log("got texture for " + card + "!");
+
+                // save the sprite to disk now
+                byte[] textureBytes = sprite.texture.EncodeToPNG();
+                File.WriteAllBytes(GetCardImageLocalPath(card+"_alt"), textureBytes);
+                Debug.Log("successfully wrote " + card + " to disk!");
+            }
         }
     }
 
@@ -195,6 +248,19 @@ public class GameManager : NetworkBehaviour
         if (ilr.img != null)
         {
             ilr.img.sprite = sprite;
+        }
+    }
+
+    void ApplyAltSprite(Sprite sprite, ImageLoadRequest ilr)
+    {
+        if (ilr.sr != null)
+        {
+            ilr.sr.transform.Find("AltFace").GetComponent<SpriteRenderer>().sprite = sprite;
+        }
+
+        if (ilr.img != null)
+        {
+            // TODO figure this out
         }
     }
 }
