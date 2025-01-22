@@ -16,6 +16,9 @@ public class CardInPlay : NetworkBehaviour
     public bool hovering = false;
     public bool dragging = false;
 
+    [SyncVar (hook = nameof(HandleRenderOrderChange))]
+    int renderOrder = 0;
+
     // card states
     [SyncVar]
     public string card = "";
@@ -52,6 +55,12 @@ public class CardInPlay : NetworkBehaviour
     string CARD_FACE_DIR_PATH;
     string CARD_IMAGE_PATH;
 
+    // when our card spawns on the server set up its render order
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        CmdSetRenderOnTop();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -88,11 +97,12 @@ public class CardInPlay : NetworkBehaviour
                 print("cloning card");
             }
 
-            // If LMB is held down...
+            // The frame if LMB is pressed down...
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 dragging = true;
                 mouseDragPositionDifference = playerCam.mousePos - transform.position;
+                CmdSetRenderOnTop();
             }
 
             // If the player taps the card
@@ -153,6 +163,12 @@ public class CardInPlay : NetworkBehaviour
         }
     }
 
+    public void HandleRenderOrderChange(int oldValue, int newRenderOrder)
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = newRenderOrder;
+        transform.Find("AltFace").GetComponent<SpriteRenderer>().sortingOrder = newRenderOrder;
+    }
+
 
     // Alt face
     [Command(requiresAuthority = false)]
@@ -211,6 +227,14 @@ public class CardInPlay : NetworkBehaviour
     public void CmdSetPosition(Vector3 newPos)
     {
         transform.position = newPos;
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdSetRenderOnTop()
+    {
+        // increment our highest render order and grab the number
+        GameManager.instance.highestRenderOrder += 1;
+        renderOrder = GameManager.instance.highestRenderOrder;
     }
 
 }

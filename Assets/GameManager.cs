@@ -42,6 +42,9 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     public int topCardLayer = 0;
 
+    [SyncVar]
+    public int highestRenderOrder;
+
     private void Awake()
     {
 
