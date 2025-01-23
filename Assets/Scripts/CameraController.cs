@@ -1,3 +1,4 @@
+using System;
 using Mirror;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ public class CameraController : NetworkBehaviour
         {
             print("we are not local player, disabling camera");
             cam.enabled = false;
+            transform.Find("HandDisplay").gameObject.SetActive(false);
         }
     }
 
@@ -59,9 +61,10 @@ public class CameraController : NetworkBehaviour
         transform.position = newPosition;
     }
 
-    [Command]
+    [Command (requiresAuthority =false)]
     public void CmdAddCardToHand(string card)
     {
+        Debug.Log("adding " + card + " to hand");
         var cards = DeckUtils.DeserializeDeck(hand);
         cards.Add(card);
         hand = DeckUtils.SerializeDeck(cards);

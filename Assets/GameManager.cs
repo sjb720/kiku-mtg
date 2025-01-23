@@ -35,8 +35,6 @@ public class GameManager : NetworkBehaviour
 
     bool consumingImageQueue = false;
 
-    // path references
-    string CARD_FACE_DIR_PATH;
 
     // the layer to set the next card we grab to
     [SyncVar]
@@ -47,21 +45,20 @@ public class GameManager : NetworkBehaviour
 
     private void Awake()
     {
-
         if(instance == null)
         {
             instance = this;
         }
-     }
-
-    private void Start()
-    {
-        CARD_FACE_DIR_PATH = Application.persistentDataPath + "/card-faces";
     }
 
     public string GetCardImageLocalPath(string card)
     {
-        return CARD_FACE_DIR_PATH + "/" + card + ".png";
+        return GetCardFaceDirectory() + "/" + card + ".png";
+    }
+
+    public string GetCardFaceDirectory()
+    {
+        return Application.persistentDataPath + "/card-faces";
     }
 
     public void RenderCardSprite(ImageLoadRequest ilr)
@@ -76,9 +73,9 @@ public class GameManager : NetworkBehaviour
         Debug.Log("getting card image for " + card);
 
         // create card cache if doesn't exist
-        if (!Directory.Exists(CARD_FACE_DIR_PATH))
+        if (!Directory.Exists(GetCardFaceDirectory()))
         {
-            Directory.CreateDirectory(CARD_FACE_DIR_PATH);
+            Directory.CreateDirectory(GetCardFaceDirectory());
         }
 
         // if card image doesn't exist, create it

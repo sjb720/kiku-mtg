@@ -280,7 +280,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.333424, y: 5.25, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.38128, y: 0.38128, z: 0.38128}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -377,21 +377,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1164665026485137086, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
-      propertyPath: card
-      value: Marchesa, Dealer of Death
-      objectReference: {fileID: 0}
     - target: {fileID: 3503187137955379451, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
       propertyPath: m_Name
       value: CardInPlay (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4865454296052220683, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.99
+      value: -19.06
       objectReference: {fileID: 0}
     - target: {fileID: 4865454296052220683, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.41
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 4865454296052220683, guid: 9b2b9137db3759644b9201d8d5e81216, type: 3}
       propertyPath: m_LocalPosition.z
@@ -532,6 +528,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   topCardLayer: 0
+  highestRenderOrder: 0
 --- !u!4 &1804599089
 Transform:
   m_ObjectHideFlags: 0
@@ -578,11 +575,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1184488607797351527, guid: b501455157391f34aa434357f52ff23a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2525957425956468317, guid: b501455157391f34aa434357f52ff23a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 14396
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6193698728066350029, guid: b501455157391f34aa434357f52ff23a, type: 3}
       propertyPath: sceneId
