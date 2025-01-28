@@ -65,6 +65,11 @@ public class Playmat : NetworkBehaviour
         CmdDrawToBattlefield();
     }
 
+    public void Shuffle()
+    {
+        CmdShuffle();
+    }
+
     [Command(requiresAuthority =false)]
     void CmdDrawCard(GameObject player)
     {
@@ -99,6 +104,20 @@ public class Playmat : NetworkBehaviour
         NetworkServer.Spawn(go);
 
         lib.RemoveAt(0);
+        library = DeckUtils.SerializeDeck(lib);
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdShuffle()
+    {
+        var lib = DeckUtils.DeserializeDeck(library);
+
+        if (lib.Count == 0)
+        {
+            return;
+        }
+
+        lib.Shuffle();
         library = DeckUtils.SerializeDeck(lib);
     }
 

@@ -167,6 +167,7 @@ public class CardInPlay : NetworkBehaviour
     {
         GetComponent<SpriteRenderer>().sortingOrder = newRenderOrder;
         transform.Find("AltFace").GetComponent<SpriteRenderer>().sortingOrder = newRenderOrder;
+        transform.Find("DebugText").GetComponent<MeshRenderer>().sortingOrder = newRenderOrder;
     }
 
 

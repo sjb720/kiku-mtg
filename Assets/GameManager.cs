@@ -135,7 +135,7 @@ public class GameManager : NetworkBehaviour
     {
         if (!File.Exists(GetCardImageLocalPath(ilr.cardName+"_alt")))
         {
-            Debug.LogError("not alt face found " + ilr.cardName);
+            Debug.Log("no alt face found " + ilr.cardName);
             return;
         }
 
@@ -248,6 +248,7 @@ public class GameManager : NetworkBehaviour
         if (ilr.img != null)
         {
             ilr.img.sprite = sprite;
+            ilr.img.transform.Find("cardname").gameObject.SetActive(false);
         }
     }
 
